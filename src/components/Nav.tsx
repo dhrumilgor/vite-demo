@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useEffect } from "react";
+import useAuthStore,{updateTokenFromStore} from "../store/authStore";
 
 const NavComponents = () => {
 const isLogin = localStorage.getItem('isLogin') || "false";
@@ -12,7 +13,7 @@ const {setIsAuthenticated} = useAuth()
         setIsAuthenticated("false");
         navigate('/')  
     }
-
+    const accessToken = updateTokenFromStore();
     useEffect(() => {
         document.body.classList.add(isLogin==='false' ? "bg-gradient-custom" : "bg-gray-200");
         return () => {
@@ -25,12 +26,16 @@ const {setIsAuthenticated} = useAuth()
         <div className=" bg-lime-200 p-2 ">
         <ul className="flex gap-4 flex-between">
             <li>
-                <Link to="/">Home </Link>
+                <Link to="/">Home -- {accessToken} </Link>
             </li>
             {isLogin==='true' && 
             <>
             <li>
                 <Link to="/dashboard">Dashboard</Link>
+            </li>
+
+            <li>
+                <Link to="/users">Users</Link>
             </li>
           
             <li className="ml-auto">

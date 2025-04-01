@@ -7,11 +7,13 @@ import { useQuery } from "@tanstack/react-query";
 import Dashboard from "../components/dashboard";
 import ProtectedRoutes from "./protectedRoutes";
 import Layout from "../components/layout";
+import Users from "../components/users";
+import useAuthStore from "../store/authStore";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />, 
+    element: <Layout />,
     children: [
       {
         path: "/main",
@@ -33,6 +35,14 @@ const router = createBrowserRouter([
           </ProtectedRoutes>
         ),
       },
+      {
+        path: "/users",
+        element: (
+          <ProtectedRoutes>
+            <Users />
+          </ProtectedRoutes>
+        ),
+      },
     ],
   },
   {
@@ -42,22 +52,25 @@ const router = createBrowserRouter([
 ]);
 
 const AppRouter = () => {
-  function callOnLoad() {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          code: 200,
-        });
-      }, 1000);
-    });
+  const { setAccessToken } = useAuthStore()
+  async function callOnLoad() {
+    // Could be GET or POST/PUT/PATCH/DELETE
+    const userData = await fetch("https://jsonplaceholder.typicode.com/todos/1").then((res) =>
+      res.json()
+    );
+
+    if(userData){
+      setAccessToken("tokenset")
+
+    }
+    return userData;
   }
 
   const { data, isLoading } = useQuery({
     queryKey: ["data"],
     queryFn: () => callOnLoad(),
   });
- const isAuthenticated = false;
+  const isAuthenticated = false;
   return (
     <>
       {isLoading && (
@@ -65,8 +78,14 @@ const AppRouter = () => {
           <p>Is Loading...</p>
         </>
       )}
-      <div  className={isAuthenticated ? 'authenticated-container' : 'unauthenticated-container'} >
-      <RouterProvider router={router} />
+      <div
+        className={
+          isAuthenticated
+            ? "authenticated-container"
+            : "unauthenticated-container"
+        }
+      >
+        <RouterProvider router={router} />
       </div>
     </>
   );
