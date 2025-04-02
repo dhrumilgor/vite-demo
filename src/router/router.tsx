@@ -9,6 +9,7 @@ import ProtectedRoutes from "./protectedRoutes";
 import Layout from "../components/layout";
 import Users from "../components/users";
 import useAuthStore from "../store/authStore";
+import UserList from "../components/usersList";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoutes>
             <Users />
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "/users-list",
+        element: (
+          <ProtectedRoutes>
+            <UserList />
           </ProtectedRoutes>
         ),
       },

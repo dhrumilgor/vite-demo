@@ -37,6 +37,10 @@ const {setIsAuthenticated} = useAuth()
             <li>
                 <Link to="/users">Users</Link>
             </li>
+
+            <li>
+                <Link to="/users-list">UsersList</Link>
+            </li>
           
             <li className="ml-auto">
                 <button className="cursor-pointer btn-primary" type="button" onClick={() => Logout()}>Logout</button>
